@@ -4,7 +4,6 @@ namespace App\Service;
 
 use App\Entity\Module;
 use DateTime;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,22 +14,23 @@ class ModuleService {
     private SerializerInterface $serializer;
     private EntityManagerInterface $entityManager;
     private EntityRepository $moduleRepository;
+    private HistoryService $historyService;
 
     private mixed $data;
     private Module $module;
     private array $modules;
 
-    private string $name;
-    private string $description;
     private string $state;
     private float $speed;
 
     public function __construct(
         SerializerInterface $serializer,
-        EntityManagerInterface $entityManager    
+        EntityManagerInterface $entityManager,
+        HistoryService $historyService    
     ){
         $this->serializer = $serializer;
         $this->entityManager = $entityManager;
+        $this->historyService = $historyService;
     }
 
     public function save(Request $request) : bool {
@@ -46,6 +46,7 @@ class ModuleService {
         return true;
     }
 
+    //méthode retournant soit un tableau de modules soit null
     public function getAll() : array | null {
 
         $this->moduleRepository = $this->entityManager->getRepository(Module::class);
@@ -54,7 +55,7 @@ class ModuleService {
 
         if(count($this->modules) > 0){
             foreach ($this->modules as $module) {
-                
+                //définition de la température en fonction de la vitesse
                 $module->setSpeed(rand(0, 100));
                 $this->speed = $module->getSpeed();
                 if($this->speed > 40) {
@@ -65,16 +66,21 @@ class ModuleService {
                     $module->setTemperature(rand(20, 50));
                 };
 
+                //état en panne si la température dépasse 100
                 $this->state = $module->getTemperature() < 100 ? 'En marche' : 'En panne';
                 $module->setState($this->state);
                 $module->setDate(new DateTime("now"));
 
+                //creer une instance d'historique si un module est en panne et la persister
+                if($this->state == 'En panne') {
+                    $this->entityManager->persist($this->historyService->create($module));
+                }
+                
                 $this->entityManager->persist($module);
                 $this->entityManager->flush();
             }
         }
         
-
         return $this->modules;
     }
 }

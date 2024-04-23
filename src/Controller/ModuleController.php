@@ -6,7 +6,6 @@ use App\Service\ModuleService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/module')]
@@ -31,7 +30,6 @@ class ModuleController extends AbstractController
     public function save(Request $request): JsonResponse
     {
         // save un module via un service
-       
         $this->isSaved = $this->moduleService->save($request);
         $this->message = $this->isSaved ? 'Module registered successfully!' : 'error in the server';
         

@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ModuleRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -31,6 +33,17 @@ class Module
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $date = null;
+
+    /**
+     * @var Collection<int, History>
+     */
+    #[ORM\OneToMany(targetEntity: History::class, mappedBy: 'module')]
+    private Collection $histories;
+
+    public function __construct()
+    {
+        $this->histories = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
