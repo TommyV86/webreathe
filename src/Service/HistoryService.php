@@ -34,7 +34,7 @@ class HistoryService {
     public function getAll() : ?array {
 
         $this->historyRepository = $this->entityManager->getRepository(History::class);
-        $this->histories = $this->historyRepository->findAll();
+        $this->histories = $this->historyRepository->findLastFive();
         return $this->histories;
     }
 }
