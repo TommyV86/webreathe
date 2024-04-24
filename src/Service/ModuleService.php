@@ -39,7 +39,8 @@ class ModuleService {
         if ($this->data == null) return false;
 
         $this->module = $this->serializer->deserialize($this->data, Module::class, "json");
-
+        $this->module->setDate(new DateTime("now"));
+        
         $this->entityManager->persist($this->module);
         $this->entityManager->flush();
 
@@ -69,7 +70,6 @@ class ModuleService {
                 //état en panne si la température dépasse 100
                 $this->state = $module->getTemperature() < 100 ? 'En marche' : 'En panne';
                 $module->setState($this->state);
-                $module->setDate(new DateTime("now"));
 
                 //creer une instance d'historique si un module est en panne et la persister
                 if($this->state == 'En panne') {
