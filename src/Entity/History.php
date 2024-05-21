@@ -22,6 +22,12 @@ class History
     #[ORM\ManyToOne]
     private ?Module $module = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?float $temperatureModule = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?float $speedModule = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -47,6 +53,30 @@ class History
     public function setModule(?Module $module): static
     {
         $this->module = $module;
+
+        return $this;
+    }
+
+    public function getTemperatureModule(): ?float
+    {
+        return $this->temperatureModule;
+    }
+
+    public function setTemperatureModule(?float $temperatureModule): static
+    {
+        $this->temperatureModule = $temperatureModule;
+
+        return $this;
+    }
+
+    public function getSpeedModule(): ?float
+    {
+        return $this->speedModule;
+    }
+
+    public function setSpeedModule(?float $speedModule): static
+    {
+        $this->speedModule = $speedModule;
 
         return $this;
     }

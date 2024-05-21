@@ -27,6 +27,8 @@ class HistoryService {
 
         $this->history = new History();
         return $this->history->setModule($module)
+                             ->setTemperatureModule($module->getTemperature())
+                             ->setSpeedModule($module->getSpeed())
                              ->setDate(new DateTime("now"));
     }
 
