@@ -17,7 +17,6 @@ class HistoryService {
     private History $history;
     private array $histories;
     private array $historiesModule;
-    private array $attribute_from_data;
     private int $idModule;
 
 
