@@ -41,6 +41,7 @@ class HistoryRepository extends ServiceEntityRepository
        {
            return $this->createQueryBuilder('h')
                ->andWhere('h.module = :val')
+               ->orderBy('h.id', 'DESC')
                ->setParameter('val', $value)
                ->getQuery()
                ->getResult()

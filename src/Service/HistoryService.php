@@ -47,9 +47,8 @@ class HistoryService {
     //méthode retournant un tableau concernant un historique d'un module ou null
     public function getHistoriesModuleById(Request $request) : ?array {
 
-        $this->attribute_from_data = json_decode($request->getContent(), true);
-        $this->idModule = (int) $this->attribute_from_data['idModule'];
-        
+        $this->idModule = $request->query->getInt('moduleId');
+
         $this->historyRepository = $this->entityManager->getRepository(History::class);
         $this->historiesModule = $this->historyRepository->findHistoriesModuleById($this->idModule);
 
