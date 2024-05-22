@@ -21,9 +21,9 @@ class HistoryRepository extends ServiceEntityRepository
         parent::__construct($registry, History::class);
     }
 
-    //    /**
-    //     * @return History[] Returns an array of History objects
-    //     */
+       /**
+        * @return History[] Returns an array of History objects
+        */
        public function findLastFive(): array
        {
            return $this->createQueryBuilder('h')
@@ -34,6 +34,19 @@ class HistoryRepository extends ServiceEntityRepository
            ;
        }
  
+       /**
+        * @return History[] Returns an array of Histories objects from Module id
+        */
+       public function findHistoriesModuleById(int $value): ?array
+       {
+           return $this->createQueryBuilder('h')
+               ->andWhere('h.module = :val')
+               ->setParameter('val', $value)
+               ->getQuery()
+               ->getResult()
+           ;
+       }
+
     //    public function findOneBySomeField($value): ?History
     //    {
     //        return $this->createQueryBuilder('h')

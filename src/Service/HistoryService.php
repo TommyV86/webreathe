@@ -7,6 +7,7 @@ use App\Entity\Module;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
+use Symfony\Component\HttpFoundation\Request;
 
 class HistoryService {
 
@@ -15,6 +16,9 @@ class HistoryService {
 
     private History $history;
     private array $histories;
+    private array $historiesModule;
+    private array $attribute_from_data;
+    private int $idModule;
 
 
     public function __construct(
@@ -38,5 +42,17 @@ class HistoryService {
         $this->historyRepository = $this->entityManager->getRepository(History::class);
         $this->histories = $this->historyRepository->findLastFive();
         return $this->histories;
+    }
+
+    //méthode retournant un tableau concernant un historique d'un module ou null
+    public function getHistoriesModuleById(Request $request) : ?array {
+
+        $this->attribute_from_data = json_decode($request->getContent(), true);
+        $this->idModule = (int) $this->attribute_from_data['idModule'];
+        
+        $this->historyRepository = $this->entityManager->getRepository(History::class);
+        $this->historiesModule = $this->historyRepository->findHistoriesModuleById($this->idModule);
+
+        return $this->historiesModule;       
     }
 }
